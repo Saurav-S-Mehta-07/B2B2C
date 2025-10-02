@@ -1,0 +1,59 @@
+
+<% layout("layouts/boilerplateCode")%>
+    <div class="container">
+
+        <div class="main-page">
+
+            <div class="main-heading">
+                <div class="main-title">
+                    <h2 id="title">Shop now!</h2>
+                    <button id="title-btn">Shop</button>
+                </div>
+
+                <div class="main-title2">
+                   
+                </div>
+            </div>
+
+            <marquee behavior="alternate" class="cards-container">
+                <div class="cards">
+                 <% listings.slice(0,12).forEach(function(item) { %>
+                  <div class="card">
+                      <img class="cards-img" src="/assets/<%=item.image%>" alt="">
+                      <h4><%= item.title %></h4>
+                  </div>
+                <% }) %>
+
+                </div>
+            </marquee>
+
+            <div class="content">
+
+                 <div class="filter-content">
+                    <%for(let i = 0; i<categories.length; i++) { %>
+                        <a href=""><%=categories[i]%></a>
+                    <% }%>
+                 </div>
+
+                 <div>
+                    <form action="/addup" method="get">
+                        <button>ADD</button>
+                    </form>
+                 </div>
+
+                 <div class="content-cards cards">
+                   <% listings.slice(0,12).forEach(function(item) { %>
+                    <div class="content-card card">
+                       <img class="content-card-img  cards-img" src="/assets/<%=item.image%>" alt="">
+                       <h4><%= item.title %></h4>
+                    </div>
+                   <% }) %>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</body>
+</html>

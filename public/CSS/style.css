@@ -1,0 +1,261 @@
+
+
+body{
+    margin: 0;
+    padding: 0;
+}
+
+.container{
+    height: 100vh;
+    width: 100%;
+}
+
+.header{
+    height: 8.2%;
+    width: 100%;
+    background-color:#FAF6E9;
+    position: fixed;
+    top: 0;
+    color:#568F87;
+    border-bottom: 1px solid #B0DB9C;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header #header-name{
+    width: 20%;
+    height: 100%;
+    display: flex;
+    justify-content: space-around;
+    justify-self: center;
+    align-items: center;
+
+}
+
+.header #header-links{
+    height: 100%;
+    width: 50%;
+    display: flex;
+    justify-content: space-around;
+    justify-self: center;
+    align-items: center;
+}
+
+#header-links a{
+    text-decoration: none;
+    color: #568F87;
+    cursor: pointer;
+}
+
+#header-links a:hover{
+    text-decoration: underline;
+    color: #064232;
+}
+
+.header #bar{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 5%;
+}
+
+
+
+.main-page{
+    background-color: #FFFDF6;
+    position:fixed;
+    top: 8.4%;
+    width: 100%;
+    height: 90%;
+    display:  flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+.main-heading{
+    color: black;
+    height: 35%;
+    width: 99%;
+    margin-bottom: 1%;
+    margin-top: 1%;
+    border-radius: 20px; 
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+
+}
+
+
+.main-title{
+    width: 20%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+    box-shadow: 2px 2px 10px #B0DB9C;
+}
+
+#title{
+    color: #568F87;
+    font-size:xx-large;
+}
+
+#title-btn{
+    border: none;
+    width: 40%;
+    height: 15%;
+    background-color: #064232;
+    color:#FFF5F2;
+    border-radius: 12px;
+    box-shadow: 2px 2px 10px #064232;
+}
+
+#title-btn:hover{
+    background-color: #568F87;
+    color: white;
+    transform: scale(1.1);
+}
+
+.main-title2{
+    height: 100%;
+    background-image: url("/assets/banner.jpeg");
+    background-repeat: repeat; 
+    flex: 1;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px; 
+}
+
+.cards-container{
+    display: flex;
+    align-items: center;
+    height: 25%;
+    width: 100%;
+    background-color: #FAF6E9;
+}
+
+.cards{
+    display:  flex;
+    flex-direction: row;
+    height: 80%;
+    width: 100%;
+}
+
+.card{
+    background-color: white;
+    border-radius: 20px;
+    height: 100px;
+    width: 150px;
+    margin: 2%;
+    padding: 5px;
+    box-shadow: 2px 2px 10px #B0DB9C;
+    border: none;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.cards-img{
+    height: 50px;
+    width: 100%;
+    border-radius: 20px;
+}
+
+#main-img{
+   height: 100%;
+   width: 100%;
+}
+
+.content{
+    height: 40%;
+    width: 100%;
+    text-align: justify;
+    color: black;
+    
+    display: flex;
+    flex-wrap: wrap;
+    flex: 1;
+}
+
+.filter-content{
+  margin-top: 1%;
+  margin-bottom: 1%;
+  height: 30%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  border: 1px solid #568F87;
+  box-shadow: 2px 2px 10px #B0DB9C;
+  overflow-x: scroll;
+  overflow-y: hidden;
+}
+
+.filter-content a {
+    margin: 2%;
+    color: #568F87;
+    text-decoration: none;
+    flex-shrink: 0;
+    cursor: pointer;
+}
+
+.filter-content a:hover{
+    color: black;
+    text-decoration: hsl(164, 83%, 14%) solid underline;
+    transform: scale(1.02);
+}
+
+.content-cards{
+    height: fit-content;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding-bottom: 50px;
+}
+
+.content-card{
+    margin: 1%;
+    height: fit-content;
+    width: 12%;
+    box-shadow: none;
+    border: 1px solid black;
+}
+
+.content-card:hover{
+   transform: scale(0.99);
+   border: 2px solid #B0DB9C;
+   box-shadow: 2px 2px 5px #B0DB9C;
+}
+
+.container-card-img{
+    height: 100px;
+    width: 100%;
+}
+
+.footer{
+    height: 6%;
+    width: 100%;
+    position: fixed;
+    bottom:  0;
+    background-color:#FAF6E9;
+    color: #568F87;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-top: 1px solid #568F87;
+}
+
+
