@@ -50,6 +50,7 @@ app.post("/main",async(req,res)=>{
    newListing.image = image;
    await newListing.save();
    res.redirect("/main"); 
+   
 });
 
 
