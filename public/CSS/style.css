@@ -111,10 +111,16 @@ body{
     font-size:xx-large;
 }
 
-#title-btn{
+.add-btn-form{
     border: none;
     width: 40%;
-    height: 15%;
+    height: 20%;
+}
+
+#title-btn{
+    border: none;
+    width: 100%;
+    height: 100%;
     background-color: #064232;
     color:#FFF5F2;
     border-radius: 12px;
@@ -146,31 +152,55 @@ body{
 
 .cards{
     display:  flex;
+    justify-content: center;
+    align-items: center;
     flex-direction: row;
-    height: 80%;
+    height: 100%;
     width: 100%;
 }
 
-.card{
-    background-color: white;
+.listing-links{
+    text-decoration: none;
     border-radius: 20px;
     height: 100px;
-    width: 150px;
-    margin: 2%;
-    padding: 5px;
-    box-shadow: 2px 2px 10px #B0DB9C;
-    border: none;
+    width: 170px;
+    margin-right: 1%;
+    color: #568F87;
 
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    border-radius: 20px;
+
+}
+
+.card{
+    border-radius: 20px;
+    height: 100%;
+    width: 100%;
+    box-shadow: 2px 2px 10px #B0DB9C;
+    border: none;
+    background-color: white;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
 }
 
 .cards-img{
-    height: 50px;
+    height: 60px;
     width: 100%;
     border-radius: 20px;
+}
+
+.dlt-listing{
+    height: 40px;
+    width: 40px;
+    border: none;
+    background-color: #568F87;
+    border-radius: 50%;
 }
 
 #main-img{
@@ -227,11 +257,28 @@ body{
 }
 
 .content-card{
-    margin: 1%;
-    height: fit-content;
-    width: 12%;
+    margin: 0;
+    height: 100%;
+    width: 100%;
     box-shadow: none;
-    border: 1px solid black;
+    border: 1px solid #568F87;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.item-links{
+    text-decoration: none;
+    height: 300px;
+    width: 200px;
+    margin: 1%;
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 1.8%;
+    color: #568F87;
 }
 
 .content-card:hover{
@@ -240,9 +287,33 @@ body{
    box-shadow: 2px 2px 5px #B0DB9C;
 }
 
-.container-card-img{
-    height: 100px;
-    width: 100%;
+.content-card-img{
+    height:50%;
+    width: 90%;
+    border: none;
+    border-radius: 12px;
+}
+
+.dlt-btn-form{
+    width: 85%;
+    height: 10%;
+    border-radius: 30px;
+    display: flex;
+    justify-content: right;
+}
+
+.dlt-btn{
+    border: none;
+    width: 20%;
+    height: 100%;
+    background-color: #568F87;
+    color:#FFF5F2;
+    border-radius: 50%;
+}
+
+.dlt-btn:hover{
+    box-shadow: 2px 2px 10px #B0DB9C;
+    transform: scale(1.1);
 }
 
 .footer{
