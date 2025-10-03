@@ -28,12 +28,12 @@ app.get("/main", async (req, res) => {
     let { q } = req.query;
     const listings = await Listing.find();
     const categories = await Item.distinct("category"); 
-    if(q){
-        const items = await Item.find({category: q});
-        return res.render("listings/index", {listings, items, categories});
+    if(q==="all" || !q){
+        const items = await Item.find();
+        return res.render("listings/index", { listings, items, categories});
     }
-    const items = await Item.find();
-    return res.render("listings/index", { listings, items, categories});
+    const items = await Item.find({category: q});
+    res.render("listings/index", {listings, items, categories});
 });
 
 
