@@ -15,13 +15,16 @@
             </div>
 
             <marquee behavior="alternate" class="cards-container">
-                <div class="cards">
-                 <% listings.slice(0,12).forEach(function(item) { %>
+                <div class="cards listing-cards">
+                 <% for(let i = 0; i<listings.length; i++) { %>
                   <div class="card">
-                      <img class="cards-img" src="/assets/<%=item.image%>" alt="">
-                      <h4><%= item.title %></h4>
+                      <img class="cards-img" src="/assets/<%=listings[i].image%>" alt="">
+                      <h4><%= listings[i].title %></h4>
+                       <form action="/main/<%= listings[i]._id %>?_method=delete" method="post">
+                          <button type="submit">delete</button>
+                       </form>
                   </div>
-                <% }) %>
+                <% } %>
 
                 </div>
             </marquee>
@@ -29,23 +32,25 @@
             <div class="content">
 
                  <div class="filter-content">
-                    <%for(let i = 0; i<categories.length; i++) { %>
-                        <a href=""><%=categories[i]%></a>
+                    <%for(let i of categories) { %>
+                        <a href="/main/?q=<%=i%>"><%=i%></a>
                     <% }%>
                  </div>
 
                  <div>
-                    <form action="/addup" method="get">
-                        <button>ADD</button>
-                    </form>
+                   <form action="/addup" method="get">
+                       <button name="down">ADD</button>
+                   </form>
                  </div>
-
                  <div class="content-cards cards">
-                   <% listings.slice(0,12).forEach(function(item) { %>
+                   <% items.slice(0,12).forEach(function(item) { %>
                     <div class="content-card card">
                        <img class="content-card-img  cards-img" src="/assets/<%=item.image%>" alt="">
                        <h4><%= item.title %></h4>
                     </div>
+                      <form action="/main/<%= item._id %>?_method=delete" method="post">
+                          <button type="submit">delete</button>
+                       </form>
                    <% }) %>
                 </div>
 

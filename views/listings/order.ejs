@@ -1,0 +1,28 @@
+
+<% layout("layouts/boilerplateCode")%>
+
+    <div class="add-list-form">
+
+         <h1 id="form-heading">Order Item</h1>
+        <form action="/main/order" class="form-list" method="post">
+            
+            <div class="form-field">
+                <label for="title">item name</label>
+                <input type="text" placeholder="  enter title" name="title" required>
+            </div>
+
+            <div class="form-field">
+                <label for="quantity">quantity</label>
+                <input type="number" name="quantity" placeholder="  enter quantity" min="1" id="quantity" required>
+            </div>
+
+            <div class="form-field">
+                <label for="vender">vender</label>
+                <input type="text" name="vender" placeholder="  enter vender's name" id="vender" required>
+            </div>
+            
+            <button class="btn order-btn">Order now!</button>
+        </form>
+
+
+    </div>

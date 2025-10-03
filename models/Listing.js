@@ -7,6 +7,8 @@ const listingSchema = new mongoose.Schema({
   },
   image: {
     type: String,
+    reqired: true,
+    default: "",
   },
   price: {
     type: Number,
