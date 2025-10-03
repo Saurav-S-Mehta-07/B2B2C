@@ -5,9 +5,12 @@
         <div class="main-page">
 
             <div class="main-heading">
+
                 <div class="main-title">
-                    <h2 id="title">Shop now!</h2>
-                    <button id="title-btn">Shop</button>
+                    <h2 id="title">Add new item!</h2>
+                   <form action="/addlist" method="get" class="add-btn-form">
+                       <button id="title-btn">ADD</button>
+                   </form>
                 </div>
 
                 <div class="main-title2">
@@ -15,15 +18,20 @@
             </div>
 
             <marquee behavior="alternate" class="cards-container">
+
                 <div class="cards listing-cards">
-                 <% for(let i = 0; i<listings.length; i++) { %>
-                  <div class="card">
-                      <img class="cards-img" src="/assets/<%=listings[i].image%>" alt="">
-                      <h4><%= listings[i].title %></h4>
-                       <form action="/main/<%= listings[i]._id %>?_method=delete" method="post">
-                          <button type="submit">delete</button>
-                       </form>
-                  </div>
+
+                 <% for(let listing of listings) { %>
+
+                   <a href="/main.item" class="listing-links">
+                    <div class="card">
+                        <img class="cards-img" src="/assets/<%=listing.image%>" alt="">
+                        <h4><%= listing.title %></h4>
+                    </div>
+                    <form class="dlt-listing-form" action="/main/<%= listing._id %>?_method=delete" method="post">
+                        <button class="dlt-listing" type="submit">dlt</button>
+                    </form>
+                  </a>
                 <% } %>
 
                 </div>
@@ -32,26 +40,31 @@
             <div class="content">
 
                  <div class="filter-content">
+                    <a href="/main/?q=all">all</a>
                     <%for(let i of categories) { %>
                         <a href="/main/?q=<%=i%>"><%=i%></a>
                     <% }%>
                  </div>
 
-                 <div>
-                   <form action="/addup" method="get">
-                       <button name="down">ADD</button>
-                   </form>
-                 </div>
                  <div class="content-cards cards">
-                   <% items.slice(0,12).forEach(function(item) { %>
-                    <div class="content-card card">
-                       <img class="content-card-img  cards-img" src="/assets/<%=item.image%>" alt="">
-                       <h4><%= item.title %></h4>
-                    </div>
-                      <form action="/main/<%= item._id %>?_method=delete" method="post">
-                          <button type="submit">delete</button>
-                       </form>
-                   <% }) %>
+
+                   <% for(let item of items){ %>
+
+                    <a href="/main/item" class="item-links">
+
+                     <div class="content-card card" type="button">
+
+                        <form class="dlt-btn-form" action="/main/<%= item._id %>?_method=delete" method="post">
+                          <button type="submit" class="dlt-btn">dlt</button>
+                        </form>
+
+                        <img class="content-card-img  cards-img" src="/assets/<%=item.image%>" alt="">
+                        <h4><%= item.title %></h4>
+                     </div>
+
+                    </a>
+                   <% } %>
+
                 </div>
 
             </div>
