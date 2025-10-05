@@ -4,7 +4,11 @@ const engine = require("ejs-mate");
 const mongoose = require("mongoose");
 const Listing = require("./models/Listing.js"); 
 const Item = require("./models/Item.js");
+const Shopkeeper = require("./models/Shopkeeper.js");
+const Customer = require("./models/customer.js");
 const methodOverride = require("method-override");
+const { emitWarning } = require("process");
+
 
 const app = express();
 const PORT = 3000;
@@ -18,10 +22,13 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(methodOverride("_method"));
 
-
 mongoose.connect("mongodb://127.0.0.1:27017/b2b2c")
 .then(() => console.log("MongoDB Connected"))
 .catch(err => console.error("MongoDB Connection Error:", err));
+
+app.get("/",(req,res)=>{
+  res.render("listings/login");
+})
 
 
 app.get("/main", async (req, res) => {
@@ -36,6 +43,54 @@ app.get("/main", async (req, res) => {
     res.render("listings/index", {listings, items, categories});
 });
 
+app.get("/customer", async (req, res) => {
+    let { q } = req.query;
+    const listings = await Listing.find();
+    const categories = await Item.distinct("category"); 
+    if(q==="all" || !q){
+        const items = await Item.find();
+        return res.render("listings/customer", { listings, items, categories});
+    }
+    const items = await Item.find({category: q});
+    res.render("listings/customer", {listings, items, categories});
+});
+
+app.get("/customer/order",async(req,res)=>{
+   let customers = await Customer.find({});
+    let items = await Item.find({_id: {$in: customers[0].myorder}});
+  res.render("listings/myorder",{items});
+});
+
+app.delete("/customer/order/:id",async(req,res)=>{
+    const { id } = req.params;
+    let customer = await Customer.findOne({});
+    customer.myorder = customer.myorder.filter(
+      (itemId) => itemId && itemId.toString() !== id
+    );
+    await customer.save();
+   res.redirect("/customer/order");
+});
+
+app.get("/main/show",async (req,res)=>{
+  let {id} = req.query;
+  let details = await Item.find({_id:id});
+  if(details.length===0){
+    details = await Listing.find({_id:id});
+  }
+  let items = await Item.find({});
+  res.render("listings/show", {details, items});
+});
+
+app.post("/main/show",async(req,res)=>{
+    let {id} = req.query;
+    let orderedItem = await Item.findById(id);
+    let customer = await Customer.findOne();
+    customer.myorder.push(orderedItem);
+    await customer.save();
+    res.redirect("/main/show/?id="+id);
+})
+
+
 
 app.get("/addlist",async (req,res)=>{
     try {
@@ -48,6 +103,7 @@ app.get("/addlist",async (req,res)=>{
 });
 
 app.post("/main",async(req,res)=>{
+
    let {title, price, category, image} = req.body;
 
    let newItem = new Item(req.body);

@@ -1,11 +1,12 @@
-const listingsData = [
+const shopkeeperData = [
   {
-    title: "Tata salt",
-    image: "salt.jpg",
-    price: 100,
-    discount: 20,
-    category: "grocery"
+    name:"saurav",
+    email:"suarav@email.com",
+    number:93939,
+    shopname:"haldu",
+    location:"haldwani",
+    city:"bageshwar",
   },
 ];
 
-module.exports = {data:listingsData};
+module.exports = {data:shopkeeperData};

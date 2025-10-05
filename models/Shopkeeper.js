@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
+const {Schema} = mongoose;
 
-let shopkeeperSchema = new mongoose.Schema({
+let shopkeeperSchema = new Schema({
     name : {
         type : String,
         required: true,
@@ -25,6 +26,12 @@ let shopkeeperSchema = new mongoose.Schema({
         type :String, 
         required : true,
     },
+    items:[
+        {
+            type: Schema.Types.ObjectId,
+            ref: "Item",
+        }
+    ]
 })
 
 const Shopkeeper = mongoose.model("Shopkeeper", shopkeeperSchema);

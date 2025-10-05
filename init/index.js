@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const initData = require("./data.js");
-const Listing = require("../models/Listing.js");
+const Customer = require("../models/Shopkeeper.js");
 
 main().then(() => {
     console.log("connection successful");
@@ -11,8 +11,8 @@ async function main() {
 }
 
 const initDB = async () => {
-    await Listing.deleteMany({});
-    await Listing.insertMany(initData.data); 
+    await Customer.deleteMany({});
+    await Customer.insertMany(initData.data); 
     console.log("data was initialized");
 }
 
