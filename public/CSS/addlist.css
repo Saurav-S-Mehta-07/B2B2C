@@ -28,11 +28,10 @@
     border: 2px solid #568F87;
     border-radius: 12px;
     width: 50%;
-    height: 75%;
+    height: 80%;
 
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
     align-items: center;
     box-shadow: 2px 2px 50px #568F87;
 }
@@ -45,6 +44,7 @@
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
+    margin: 2%;
 }
 
 .form-field input{
@@ -59,14 +59,21 @@
     transform: scale(1.02);
 }
 
-.btn{
+.btn-field{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-field .btn{
     border: none;
     width: 30%;
-    height: 10%;
+    height: 60px;
     background-color: #064232;
     color:#FFF5F2;
     border-radius: 12px;
     box-shadow: 2px 2px 5px #064232;
+    font-size: x-large;
 }
 
 .btn:hover{

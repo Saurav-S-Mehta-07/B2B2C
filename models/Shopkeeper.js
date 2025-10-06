@@ -1,38 +1,27 @@
 const mongoose = require("mongoose");
-const {Schema} = mongoose;
+const passportLocalMongoose = require("passport-local-mongoose");
 
-let shopkeeperSchema = new Schema({
-    name : {
-        type : String,
-        required: true,
-    },
-    email : {
-        type : String,
-        required: true,
-    },
-    number:{
-        type : Number,
-        required: true,
-    },
-    shopname : {
-        type : String,
-        required : true,
-    },
-    location : {
-        type : String, 
-        required : true,
-    },
-    city: {
-        type :String, 
-        required : true,
-    },
-    items:[
-        {
-            type: Schema.Types.ObjectId,
-            ref: "Item",
-        }
-    ]
-})
+const orderSchema = new mongoose.Schema({
+  item: { type: mongoose.Schema.Types.ObjectId, ref: "Item", required: true },
+  quantity: { type: Number, default: 1 },
+  image : { type: String },
+  title : { type: String },
+  price : { type: Number },
+  orderedAt: { type: Date, default: Date.now }
+});
 
-const Shopkeeper = mongoose.model("Shopkeeper", shopkeeperSchema);
-module.exports = Shopkeeper;
+const shopkeeperSchema = new mongoose.Schema({
+  name: String,
+  email: { type: String, unique: true, required: true },
+  number: Number,
+  shopname: String,
+  location: String,
+  city: String,
+  items: [{ type: mongoose.Schema.Types.ObjectId, ref: "Item" }], 
+  myorder: [orderSchema]  
+});
+
+
+shopkeeperSchema.plugin(passportLocalMongoose, { usernameField: "email" });
+
+module.exports = mongoose.model("Shopkeeper", shopkeeperSchema);

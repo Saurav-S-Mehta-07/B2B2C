@@ -1,11 +1,11 @@
 const shopkeeperData = [
   {
-    name:"saurav",
-    email:"suarav@email.com",
-    number:93939,
-    shopname:"haldu",
-    location:"haldwani",
-    city:"bageshwar",
+  name: "SAURAV",
+  email: "saav@gmail.com",
+  number: 879332978,
+  shopname: "asdl",
+  location: "kd",
+  city: "dl",
   },
 ];
 

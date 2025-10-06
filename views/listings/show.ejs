@@ -1,19 +1,25 @@
 <% layout("layouts/boilerplateCode")%>
+<div class="show-page">
+  <div class="show-containers">
+  
+      <div class="clicked-show">
+              <div class="show-card" type="button">
+                  <img class="show-card-img" src="/assets/<%=details.image%>">
+                  <h4 class="item-title"><%=details.title%></details></h4>
+              </div>
+              <form action="/buyItem/<%=details._id%>" method="get" class="order-now">
+                  <button class="buy-btn">Buy now</button>
+              </form>
+      </div>
+      
+      <div class="show-details">
+              
+      </div>
+  
+  </div> 
+  
+  <div class="show-list">
+      <%- include("../includes/items.ejs") %>
+  </div>
 
-<div class="show-containers">
-
-    <div class="clicked-show">
-            <div class="show-card" type="button">
-                <img class="show-card-img" src="/assets/<%=details[0].image%>">
-                <h4 class="item-title"><%=details[0].title%></details></h4>
-            </div>
-            <form href="/main/show/?id=<%=details[0]._id%>" method="post" class="order-now">
-                <button class="buy-btn">Order now</button>
-            </form>
-    </div>
-    
-    <div class="show-all">
-            <%- include("../includes/items.ejs") %>
-    </div>
-
-</div> 
+</div>

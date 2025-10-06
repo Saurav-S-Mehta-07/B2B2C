@@ -5,13 +5,14 @@
         <div class="content-cards cards">
 
             <% for(let item of items){ %>
-                <a href="/main/show/?id=<%=item._id%>" class="item-links">
+                <a href="/main/show/<%=item._id%>" class="item-links">
 
                   <div class="content-card card" type="button">
-
+                     <form class="dlt-btn-form" action="/main/<%= item._id %>?_method=delete" method="post">
+                        <button type="submit" class="dlt-btn">dlt</button>
+                     </form>
                     <img class="content-card-img  cards-img" src="/assets/<%=item.image%>" alt="">
                     <h4 ><%= item.title %></h4>
-
                   </div>
 
                 </a>

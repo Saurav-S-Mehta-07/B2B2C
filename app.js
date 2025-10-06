@@ -1,137 +1,169 @@
 const express = require("express");
 const path = require("path");
-const engine = require("ejs-mate"); 
+const engine = require("ejs-mate");
 const mongoose = require("mongoose");
-const Listing = require("./models/Listing.js"); 
-const Item = require("./models/Item.js");
-const Shopkeeper = require("./models/Shopkeeper.js");
-const Customer = require("./models/customer.js");
+const passport = require("passport");
+const LocalStrategy = require("passport-local");
+const session = require("express-session");
+const flash = require("connect-flash");
 const methodOverride = require("method-override");
-const { emitWarning } = require("process");
 
+const Item = require("./models/Item");
+const Shopkeeper = require("./models/Shopkeeper");
 
 const app = express();
 const PORT = 3000;
 
+// View engine & static
 app.engine("ejs", engine);
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
-
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(methodOverride("_method"));
 
+// MongoDB
 mongoose.connect("mongodb://127.0.0.1:27017/b2b2c")
-.then(() => console.log("MongoDB Connected"))
-.catch(err => console.error("MongoDB Connection Error:", err));
+  .then(() => console.log("MongoDB Connected"))
+  .catch(err => console.error(err));
 
-app.get("/",(req,res)=>{
-  res.render("listings/login");
-})
+// Session
+app.use(session({
+  secret: "supersecretkey",
+  resave: false,
+  saveUninitialized: false,
+  cookie: { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true } // 1 month
+}));
 
+app.use(flash());
 
-app.get("/main", async (req, res) => {
-    let { q } = req.query;
-    const listings = await Listing.find();
-    const categories = await Item.distinct("category"); 
-    if(q==="all" || !q){
-        const items = await Item.find();
-        return res.render("listings/index", { listings, items, categories});
-    }
-    const items = await Item.find({category: q});
-    res.render("listings/index", {listings, items, categories});
+// Passport
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy({ usernameField: "email" }, Shopkeeper.authenticate()));
+passport.serializeUser(Shopkeeper.serializeUser());
+passport.deserializeUser(Shopkeeper.deserializeUser());
+
+// Locals
+app.use((req, res, next) => {
+  res.locals.currentUser = req.user;
+  res.locals.success = req.flash("success");
+  res.locals.error = req.flash("error");
+  next();
 });
 
-app.get("/customer", async (req, res) => {
-    let { q } = req.query;
-    const listings = await Listing.find();
-    const categories = await Item.distinct("category"); 
-    if(q==="all" || !q){
-        const items = await Item.find();
-        return res.render("listings/customer", { listings, items, categories});
-    }
-    const items = await Item.find({category: q});
-    res.render("listings/customer", {listings, items, categories});
+// Middleware
+const isLoggedIn = (req, res, next) => req.isAuthenticated() ? next() : res.redirect("/");
+const redirectIfLoggedIn = (req, res, next) => req.isAuthenticated() ? res.redirect("/main") : next();
+const catchAsync = fn => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next);
+
+// Routes
+app.get("/", redirectIfLoggedIn, (req, res) => res.render("user/login"));
+app.get("/signup", redirectIfLoggedIn, (req, res) => res.render("user/signup"));
+
+app.post("/signup", catchAsync(async (req, res) => {
+  const { email, password, name, shopname, location, city } = req.body;
+  const newShopkeeper = new Shopkeeper({ email, name, shopname, location, city });
+  await Shopkeeper.register(newShopkeeper, password);
+  req.login(newShopkeeper, err => {
+    if (err) throw err;
+    req.flash("success", `Welcome, ${req.user.name}!`);
+    res.redirect("/main");
+  });
+}));
+
+app.post("/login", passport.authenticate("local", {
+  failureRedirect: "/",
+  failureFlash: true
+}), (req, res) => {
+  req.flash("success", `Welcome back, ${req.user.name}!`);
+  res.redirect("/main");
 });
 
-app.get("/customer/order",async(req,res)=>{
-   let customers = await Customer.find({});
-    let items = await Item.find({_id: {$in: customers[0].myorder}});
-  res.render("listings/myorder",{items});
+app.get("/logout", (req, res, next) => {
+  req.logout(err => {
+    if (err) return next(err);
+    req.flash("success", "Logged out successfully!");
+    res.redirect("/");
+  });
 });
 
-app.delete("/customer/order/:id",async(req,res)=>{
-    const { id } = req.params;
-    let customer = await Customer.findOne({});
-    customer.myorder = customer.myorder.filter(
-      (itemId) => itemId && itemId.toString() !== id
-    );
-    await customer.save();
-   res.redirect("/customer/order");
-});
+// Dashboard
+app.get("/main", isLoggedIn, catchAsync(async (req, res) => {
+  const shopkeeper = await Shopkeeper.findById(req.user._id).populate("items");
+  let items = shopkeeper.items;
+  const categories = [...new Set(items.map(i => i.category))];
+  if (req.query.q && req.query.q !== "all") items = items.filter(i => i.category === req.query.q);
+  res.render("listings/index", { shopkeeper, items, categories, q: req.query.q || "all" });
+}));
 
-app.get("/main/show",async (req,res)=>{
-  let {id} = req.query;
-  let details = await Item.find({_id:id});
-  if(details.length===0){
-    details = await Listing.find({_id:id});
-  }
-  let items = await Item.find({});
-  res.render("listings/show", {details, items});
-});
+// Orders
+app.get("/main/order", isLoggedIn, catchAsync(async (req, res) => {
+  const shopkeeper = await Shopkeeper.findById(req.user._id).populate("myorder");
+  res.render("listings/myorder", { orders: shopkeeper.myorder });
+}));
 
-app.post("/main/show",async(req,res)=>{
-    let {id} = req.query;
-    let orderedItem = await Item.findById(id);
-    let customer = await Customer.findOne();
-    customer.myorder.push(orderedItem);
-    await customer.save();
-    res.redirect("/main/show/?id="+id);
-})
-
-
-
-app.get("/addlist",async (req,res)=>{
-    try {
-    const listings = await Listing.find();
-    res.render("listings/addlist", { listings });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Error fetching listings");
-  }
-});
-
-app.post("/main",async(req,res)=>{
-
-   let {title, price, category, image} = req.body;
-
-   let newItem = new Item(req.body);
-
-   let newListing = new Listing(req.body); 
-
-   await newListing.save();
-   await newItem.save();
-
-   res.redirect("/main"); 
-});
-
-app.delete("/main/:id", async(req, res)=>{
-   let {id} = req.params;
-   let dltItem = await Item.findByIdAndDelete(id);
-   let dltListing = await Listing.findByIdAndDelete(id);
-   res.redirect(`/main`);
-})
-
-
-app.get("/main/order",(req,res)=>{
-  res.render("listings/order");
-})
-
-app.post("/main/order",(req,res)=>{
-  
+app.delete("/main/order/:id", isLoggedIn, catchAsync(async (req, res) => {
+  const shopkeeper = await Shopkeeper.findById(req.user._id);
+  shopkeeper.myorder = shopkeeper.myorder.filter(order => order._id.toString() !== req.params.id);
+  await shopkeeper.save();
+  req.flash("success", "Order deleted successfully!");
   res.redirect("/main/order");
-})
+}));
 
+// Item Routes
+app.get("/main/show/:id", isLoggedIn, catchAsync(async (req, res) => {
+  const details = await Item.findById(req.params.id);
+  const shopkeeper = await Shopkeeper.findById(req.user._id).populate("items");
+  res.render("listings/show", { details, items: shopkeeper.items });
+}));
+
+app.get("/addlist", isLoggedIn, catchAsync(async (req, res) => {
+  const shopkeeper = await Shopkeeper.findById(req.user._id).populate("items");
+  res.render("listings/addlist", { items: shopkeeper.items });
+}));
+
+app.post("/main", isLoggedIn, catchAsync(async (req, res) => {
+  const { title, price, category, image } = req.body;
+  const newItem = await Item.create({ title, price, category, image });
+  const shopkeeper = await Shopkeeper.findById(req.user._id);
+  shopkeeper.items.push(newItem._id);
+  await shopkeeper.save();
+  req.flash("success", "Item added successfully!");
+  res.redirect("/main");
+}));
+
+app.delete("/main/:id", isLoggedIn, catchAsync(async (req, res) => {
+  await Item.findByIdAndDelete(req.params.id);
+  const shopkeeper = await Shopkeeper.findById(req.user._id);
+  shopkeeper.items = shopkeeper.items.filter(id => id.toString() !== req.params.id);
+  await shopkeeper.save();
+  req.flash("success", "Item deleted successfully!");
+  res.redirect("/main");
+}));
+
+// Buy Item
+app.get("/buyItem/:id", isLoggedIn, catchAsync(async (req, res) => {
+  const orderedItem = await Item.findById(req.params.id);
+  res.render("listings/buyItem", { orderedItem });
+}));
+
+app.post("/buyItem/:id", isLoggedIn, catchAsync(async (req, res) => {
+  const qty = parseInt(req.body.quantity);
+  const item = await Item.findById(req.params.id);
+  const shopkeeper = await Shopkeeper.findById(req.user._id);
+  shopkeeper.myorder.push({ item: req.params.id, quantity: qty, image: item.image, title: item.title, price: item.price });
+  await shopkeeper.save();
+  req.flash("success", "Item purchased successfully!");
+  res.redirect("/main/show/" + req.params.id);
+}));
+
+// Global Error Handler
+app.use((err, req, res, next) => {
+  console.error(err);
+  req.flash("error", err.message || "Something went wrong!");
+  res.redirect("back");
+});
 
 app.listen(PORT, () => console.log(`🚀 Server running at http://localhost:${PORT}`));

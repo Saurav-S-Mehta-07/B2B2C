@@ -13,6 +13,7 @@
                    </form>
                 </div>
 
+
                 <div class="main-title2">
                 </div>
             </div>
@@ -21,9 +22,9 @@
 
                 <div class="cards listing-cards">
 
-                 <% for(let listing of listings) { %>
+                 <% for(let listing of items) { %>
 
-                   <a href="/main/show/?id=<%=listing._id%>" class="listing-links">
+                   <a href="/main/show/<%=listing._id%>" class="listing-links">
                     <div class="card">
                         <img class="cards-img" src="/assets/<%=listing.image%>" alt="">
                         <h4><%= listing.title %></h4>
@@ -49,8 +50,9 @@
                  <div class="content-cards cards">
 
                    <% for(let item of items){ %>
+                    
+                    <a href="/main/show/<%=item._id%>" class="item-links">
 
-                    <a href="/main/show/?id=<%=item._id%>" class="item-links">
                      <div class="content-card card" type="button">
                         <form class="dlt-btn-form" action="/main/<%= item._id %>?_method=delete" method="post">
                           <button type="submit" class="dlt-btn">dlt</button>
@@ -69,5 +71,3 @@
         </div>
 
     </div>
-</body>
-</html>
